@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-export default function Sidebar({ currentUser, activeView, setActiveView, onLogout, isFirebaseConnected, dbStatusDesc, divisions = [] }) {
+export default function Sidebar({ currentUser, activeView, setActiveView, onLogout, isFirebaseConnected, dbStatusDesc, divisions = [], isMobileOpen, setIsMobileOpen }) {
   if (!currentUser) return null;
 
   // Find division name dynamically from divisions list (or fall back)
@@ -21,6 +21,13 @@ export default function Sidebar({ currentUser, activeView, setActiveView, onLogo
     { id: 'verifier', label: 'ตรวจสอบราคามาตรฐาน', icon: <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/> },
   ];
 
+  const handleNavClick = (viewId) => {
+    setActiveView(viewId);
+    if (setIsMobileOpen) {
+      setIsMobileOpen(false);
+    }
+  };
+
   // System Backoffice Management Menu Items (Visible strictly ONLY to Super Admin)
   const isSuperAdmin = (currentUser?.role || '').trim().toLowerCase() === 'super admin';
 
@@ -31,7 +38,7 @@ export default function Sidebar({ currentUser, activeView, setActiveView, onLogo
     { id: 'trash', label: 'ถังขยะกู้ครุภัณฑ์', icon: <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4zM9 9h2v8H9V9zm4 0h2v8h-2V9z"/> }
   ];
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isMobileOpen ? 'mobile-open' : ''}`}>
       <div className="brand-section">
         <div className="brand-icon">
           <svg viewBox="0 0 24 24">
@@ -42,6 +49,13 @@ export default function Sidebar({ currentUser, activeView, setActiveView, onLogo
           <h2>ระบบจัดการครุภัณฑ์</h2>
           <span>สำนักงานสาธารณสุขและสิ่งแวดล้อม เทศบาลนครยะลา</span>
         </div>
+        {setIsMobileOpen && (
+          <button className="sidebar-close-btn" onClick={() => setIsMobileOpen(false)} aria-label="Close menu">
+            <svg viewBox="0 0 24 24">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+            </svg>
+          </button>
+        )}
       </div>
 
       {/* User Profile Header Section */}
@@ -66,7 +80,7 @@ export default function Sidebar({ currentUser, activeView, setActiveView, onLogo
             className={`nav-item ${activeView === item.id ? 'active' : ''}`}
             onClick={(e) => {
               e.preventDefault();
-              setActiveView(item.id);
+              handleNavClick(item.id);
             }}
           >
             <svg viewBox="0 0 24 24">{item.icon}</svg>
@@ -86,7 +100,7 @@ export default function Sidebar({ currentUser, activeView, setActiveView, onLogo
                 className={`nav-item ${activeView === item.id ? 'active' : ''}`}
                 onClick={(e) => {
                   e.preventDefault();
-                  setActiveView(item.id);
+                  handleNavClick(item.id);
                 }}
               >
                 <svg viewBox="0 0 24 24">{item.icon}</svg>

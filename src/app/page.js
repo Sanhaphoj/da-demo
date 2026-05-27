@@ -60,7 +60,8 @@ export default function RootPage() {
   const [currentUser, setCurrentUser] = useState(null);
   const [activeView, setActiveView] = useState('dashboard');
   const [theme, setTheme] = useState('light'); // 'dark' | 'light' (Light as default)
-  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   // App Dynamic State
   const [assets, setAssets] = useState([]);
   const [divisions, setDivisions] = useState([]);
@@ -245,7 +246,7 @@ export default function RootPage() {
 
           if (docSnap.exists()) {
             const data = docSnap.data();
-            
+
             if (data.divisions) {
               setDivisions(data.divisions);
               localStorage.setItem('da_divisions', JSON.stringify(data.divisions));
@@ -271,7 +272,7 @@ export default function RootPage() {
               const localUsersStr = localStorage.getItem('da_users');
               const localUsers = localUsersStr ? JSON.parse(localUsersStr) : [];
               const cloudEmails = new Set(data.users.map(u => u.email));
-              
+
               // Only keep local users if they aren't on the cloud list yet
               const onlyLocal = localUsers.filter(u => !cloudEmails.has(u.email));
               if (onlyLocal.length > 0) {
@@ -378,7 +379,7 @@ export default function RootPage() {
       deletedAt: new Date().toISOString()
     };
     const updatedTrash = [deletedItem, ...trashAssets];
-    
+
     const tenDaysAgo = new Date();
     tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
     const finalTrash = updatedTrash.filter(t => t.deletedAt && new Date(t.deletedAt) >= tenDaysAgo);
@@ -466,7 +467,7 @@ export default function RootPage() {
       sessionStorage.removeItem('da_current_user');
       setCurrentUser(null);
       setActiveView('dashboard');
-      
+
       // Wipe dynamic visual tables memory in React state
       setAssets([]);
       setDivisions([]);
@@ -499,23 +500,23 @@ export default function RootPage() {
         return <DashboardView assets={assets} theme={theme} />;
       case 'assets':
         return (
-          <AssetsView 
-            assets={assets} 
-            divisions={divisions} 
-            currentUser={currentUser} 
-            onSaveAsset={handleSaveAsset} 
-            onDeleteAsset={handleDeleteAsset} 
+          <AssetsView
+            assets={assets}
+            divisions={divisions}
+            currentUser={currentUser}
+            onSaveAsset={handleSaveAsset}
+            onDeleteAsset={handleDeleteAsset}
           />
         );
       case 'org':
         // Secure Backoffice Guard: Only Super Admin can access Org Management
         if (isSuperAdmin) {
           return (
-            <OrgView 
-              divisions={divisions} 
-              assets={assets} 
-              currentUser={currentUser} 
-              onSaveDivisions={handleSaveDivisions} 
+            <OrgView
+              divisions={divisions}
+              assets={assets}
+              currentUser={currentUser}
+              onSaveDivisions={handleSaveDivisions}
             />
           );
         } else {
@@ -527,11 +528,11 @@ export default function RootPage() {
         // Secure Backoffice Guard: Only Super Admin can access User Management
         if (isSuperAdmin) {
           return (
-            <UsersView 
-              users={users} 
-              divisions={divisions} 
-              currentUser={currentUser} 
-              onSaveUsers={handleSaveUsers} 
+            <UsersView
+              users={users}
+              divisions={divisions}
+              currentUser={currentUser}
+              onSaveUsers={handleSaveUsers}
             />
           );
         } else {
@@ -541,11 +542,11 @@ export default function RootPage() {
         // Secure Backoffice Guard: Only Super Admin can access Database Configuration
         if (isSuperAdmin) {
           return (
-            <DatabaseView 
-              isFirebaseConnected={isFirebaseConnected} 
-              dbStatusDesc={dbStatusDesc} 
-              onSaveFirebaseConfig={handleSaveFirebaseConfig} 
-              currentConfig={firebaseConfig} 
+            <DatabaseView
+              isFirebaseConnected={isFirebaseConnected}
+              dbStatusDesc={dbStatusDesc}
+              onSaveFirebaseConfig={handleSaveFirebaseConfig}
+              currentConfig={firebaseConfig}
             />
           );
         } else {
@@ -588,7 +589,7 @@ export default function RootPage() {
     <>
       {/* 1. SECURE AUTH OVERLAY (When session not verified) */}
       {!currentUser && (
-        <AuthScreen 
+        <AuthScreen
           onLoginSuccess={(user) => {
             setCurrentUser(user);
             // Re-load app dynamic data structures on login success
@@ -600,7 +601,7 @@ export default function RootPage() {
             setUsers(localUsers ? JSON.parse(localUsers) : []);
             const localTrash = localStorage.getItem('da_trash');
             setTrashAssets(localTrash ? JSON.parse(localTrash) : []);
-          }} 
+          }}
           divisions={divisions}
           firestoreDb={firestoreDbRef.current}
           isFirebaseConnected={isFirebaseConnected}
@@ -610,16 +611,44 @@ export default function RootPage() {
       {/* 2. AUTHENTICATED WORKSPACE WORK ENVIRONMENT */}
       {currentUser && (
         <div className="app-container">
-          <Sidebar 
-            currentUser={currentUser} 
-            activeView={activeView} 
-            setActiveView={setActiveView} 
+          {/* Mobile Header Bar */}
+          <div className="mobile-header-bar">
+            <button className="mobile-menu-btn" onClick={() => setIsSidebarOpen(true)} aria-label="Open menu">
+              <svg viewBox="0 0 24 24">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+              </svg>
+            </button>
+            <div className="mobile-brand-title">
+              <h2>ระบบครุภัณฑ์ SASUK YALA</h2>
+            </div>
+            <button className="mobile-theme-btn" onClick={toggleTheme} aria-label="Toggle theme">
+              <svg viewBox="0 0 24 24">
+                {theme === 'light' ? (
+                  <path d="M12 3c.13 0 .26 0 .38.02C9.24 4.9 7.45 8.22 7.45 12c0 3.78 1.79 7.1 4.93 8.98-.12.02-.25.02-.38.02-4.97 0-9-4.03-9-9s4.03-9 9-9z" />
+                ) : (
+                  <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm-1.06-10.9c-.39-.39-.39-1.03 0-1.41l1.06-1.06c.39-.39 1.03-.39 1.41 0s.39 1.03 0 1.41l-1.06 1.06c-.39.39-1.02.39-1.41 0zM5.99 18.36c-.39-.39-.39-1.03 0-1.41l1.06-1.06c.39-.39 1.03-.39 1.41 0s.39 1.03 0 1.41l-1.06 1.06c-.39.39-1.03.39-1.41 0z" />
+                )}
+              </svg>
+            </button>
+          </div>
+
+          {/* Sidebar Backdrop Overlay */}
+          {isSidebarOpen && (
+            <div className="sidebar-backdrop" onClick={() => setIsSidebarOpen(false)}></div>
+          )}
+
+          <Sidebar
+            currentUser={currentUser}
+            activeView={activeView}
+            setActiveView={setActiveView}
             onLogout={handleLogout}
             isFirebaseConnected={isFirebaseConnected}
             dbStatusDesc={dbStatusDesc}
             divisions={divisions}
+            isMobileOpen={isSidebarOpen}
+            setIsMobileOpen={setIsSidebarOpen}
           />
-          
+
           <main className="main-content">
             <header className="content-header">
               <div className="header-title">
@@ -627,17 +656,17 @@ export default function RootPage() {
                 <p id="view-subtitle">{activeMetadata.subtitle}</p>
               </div>
               <div className="header-controls">
-                <button 
-                  id="theme-toggle" 
-                  className="theme-toggle-btn" 
+                <button
+                  id="theme-toggle"
+                  className="theme-toggle-btn"
                   title="เปลี่ยนธีม"
                   onClick={toggleTheme}
                 >
                   <svg viewBox="0 0 24 24">
                     {theme === 'light' ? (
-                      <path d="M12 3c.13 0 .26 0 .38.02C9.24 4.9 7.45 8.22 7.45 12c0 3.78 1.79 7.1 4.93 8.98-.12.02-.25.02-.38.02-4.97 0-9-4.03-9-9s4.03-9 9-9z"/>
+                      <path d="M12 3c.13 0 .26 0 .38.02C9.24 4.9 7.45 8.22 7.45 12c0 3.78 1.79 7.1 4.93 8.98-.12.02-.25.02-.38.02-4.97 0-9-4.03-9-9s4.03-9 9-9z" />
                     ) : (
-                      <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm-1.06-10.9c-.39-.39-.39-1.03 0-1.41l1.06-1.06c.39-.39 1.03-.39 1.41 0s.39 1.03 0 1.41l-1.06 1.06c-.39.39-1.02.39-1.41 0zM5.99 18.36c-.39-.39-.39-1.03 0-1.41l1.06-1.06c.39-.39 1.03-.39 1.41 0s.39 1.03 0 1.41l-1.06 1.06c-.39.39-1.03.39-1.41 0z"/>
+                      <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm-1.06-10.9c-.39-.39-.39-1.03 0-1.41l1.06-1.06c.39-.39 1.03-.39 1.41 0s.39 1.03 0 1.41l-1.06 1.06c-.39.39-1.02.39-1.41 0zM5.99 18.36c-.39-.39-.39-1.03 0-1.41l1.06-1.06c.39-.39 1.03-.39 1.41 0s.39 1.03 0 1.41l-1.06 1.06c-.39.39-1.03.39-1.41 0z" />
                     )}
                   </svg>
                 </button>
