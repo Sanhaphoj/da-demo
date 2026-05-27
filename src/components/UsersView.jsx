@@ -148,7 +148,7 @@ export default function UsersView({ users = [], divisions = [], currentUser, onS
               <tr>
                 <th>ชื่อผู้ใช้งาน</th>
                 <th>อีเมลบัญชี</th>
-                <th>ฝ่ายงานที่สังกัด</th>
+                <th className="hide-mobile">ฝ่ายงานที่สังกัด</th>
                 <th>ระดับสิทธิ์</th>
                 <th style={{ textAlign: 'center' }}>จัดการระดับสิทธิ์</th>
                 <th style={{ textAlign: 'center' }}>การดำเนินการ</th>
@@ -167,7 +167,7 @@ export default function UsersView({ users = [], divisions = [], currentUser, onS
                       {user.name} {isSelf && <span style={{ fontWeight: 'normal', fontSize: '0.72rem', color: 'var(--accent-color)' }}>(คุณ)</span>}
                     </td>
                     <td style={{ fontFamily: 'Inter', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{user.email}</td>
-                    <td style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{divName}</td>
+                    <td className="hide-mobile" style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{divName}</td>
                     <td>
                       <span className={`badge ${user.role === 'super admin' ? 'badge-error' : user.role === 'admin' ? 'badge-warning' : 'badge-success'}`}>
                         {user.role}

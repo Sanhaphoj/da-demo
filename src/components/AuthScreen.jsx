@@ -7,7 +7,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb, isFirebaseConnected }) {
   const [activeTab, setActiveTab] = useState('login'); // 'login' | 'register'
-  
+
   // Login Form State
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -86,7 +86,7 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
 
     try {
       const hashedPassword = await hashPassword(password);
-      
+
       // Fetch users from localStorage
       const localUsersStr = localStorage.getItem('da_users');
       const users = localUsersStr ? JSON.parse(localUsersStr) : [];
@@ -133,7 +133,7 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
 
     try {
       const email = registerEmail.trim().toLowerCase();
-      
+
       // Fetch existing users to check duplicate
       let users = [];
       const localUsersStr = localStorage.getItem('da_users');
@@ -166,7 +166,7 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
       // Sync to Firebase if connected
       if (isFirebaseConnected && firestoreDb) {
         const docRef = doc(firestoreDb, "durable_articles_sys", "office_state");
-        
+
         // Fetch current snapshot to merge users instead of overwriting!
         // This is a CRITICAL BUG FIX so registered users aren't deleted!
         const docSnap = await getDoc(docRef);
@@ -220,18 +220,18 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
             </svg>
           </div>
           <h2>ระบบจัดการครุภัณฑ์สำนัก</h2>
-          <p>สำนักงานสาธารณสุขและสิ่งแวดล้อม เทศบาลนครยะลา</p>
+          <p>สำนักงานเทศบาล</p>
         </div>
 
         <div className="auth-tabs">
-          <button 
-            className={`auth-tab ${activeTab === 'login' ? 'active' : ''}`} 
+          <button
+            className={`auth-tab ${activeTab === 'login' ? 'active' : ''}`}
             onClick={() => setActiveTab('login')}
           >
             เข้าสู่ระบบ
           </button>
-          <button 
-            className={`auth-tab ${activeTab === 'register' ? 'active' : ''}`} 
+          <button
+            className={`auth-tab ${activeTab === 'register' ? 'active' : ''}`}
             onClick={() => setActiveTab('register')}
           >
             สมัครสมาชิก
@@ -245,14 +245,14 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
               <label htmlFor="login-email">อีเมลผู้ใช้งาน *</label>
               <div className="input-icon-container">
                 <svg className="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" /></svg>
-                <input 
-                  type="email" 
-                  id="login-email" 
-                  className="auth-input" 
-                  placeholder="example@sasuk.go.th" 
+                <input
+                  type="email"
+                  id="login-email"
+                  className="auth-input"
+                  placeholder="example@sasuk.go.th"
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
-                  required 
+                  required
                 />
               </div>
             </div>
@@ -261,19 +261,19 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
               <label htmlFor="login-password">รหัสผ่าน *</label>
               <div className="input-icon-container">
                 <svg className="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" /></svg>
-                <input 
-                  type={showLoginPassword ? "text" : "password"} 
-                  id="login-password" 
-                  className="auth-input" 
-                  placeholder="••••••••" 
+                <input
+                  type={showLoginPassword ? "text" : "password"}
+                  id="login-password"
+                  className="auth-input"
+                  placeholder="••••••••"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
-                  required 
+                  required
                   autoComplete="current-password"
                 />
-                <button 
-                  type="button" 
-                  className="password-toggle" 
+                <button
+                  type="button"
+                  className="password-toggle"
                   onClick={() => setShowLoginPassword(!showLoginPassword)}
                 >
                   <svg viewBox="0 0 24 24" className="eye-icon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" /></svg>
@@ -283,9 +283,9 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
 
             <div className="form-options">
               <label className="remember-me">
-                <input 
-                  type="checkbox" 
-                  id="login-remember" 
+                <input
+                  type="checkbox"
+                  id="login-remember"
                   checked={loginRemember}
                   onChange={(e) => setLoginRemember(e.target.checked)}
                 />
@@ -306,14 +306,14 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
                   <label htmlFor="register-name">ชื่อ-นามสกุลจริง *</label>
                   <div className="input-icon-container">
                     <svg className="input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
-                    <input 
-                      type="text" 
-                      id="register-name" 
-                      className="auth-input" 
-                      placeholder="นายสุขใจ ทะเบียนครุภัณฑ์" 
+                    <input
+                      type="text"
+                      id="register-name"
+                      className="auth-input"
+                      placeholder="นายสุขใจ ทะเบียนครุภัณฑ์"
                       value={registerName}
                       onChange={(e) => setRegisterName(e.target.value)}
-                      required 
+                      required
                     />
                   </div>
                 </div>
@@ -322,9 +322,9 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
                   <label htmlFor="register-division">ฝ่ายงานที่สังกัด *</label>
                   <div className="input-icon-container">
                     <svg className="input-icon" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" /></svg>
-                    <select 
-                      id="register-division" 
-                      className="auth-input-select" 
+                    <select
+                      id="register-division"
+                      className="auth-input-select"
                       value={registerDivision}
                       onChange={(e) => setRegisterDivision(e.target.value)}
                       required
@@ -341,14 +341,14 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
                   <label htmlFor="register-email">อีเมลผู้ใช้งาน (ใช้เพื่อเข้าสู่ระบบ) *</label>
                   <div className="input-icon-container">
                     <svg className="input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" /></svg>
-                    <input 
-                      type="email" 
-                      id="register-email" 
-                      className="auth-input" 
-                      placeholder="admin@sasuk.go.th" 
+                    <input
+                      type="email"
+                      id="register-email"
+                      className="auth-input"
+                      placeholder="admin@sasuk.go.th"
                       value={registerEmail}
                       onChange={(e) => setRegisterEmail(e.target.value)}
-                      required 
+                      required
                     />
                   </div>
                 </div>
@@ -359,30 +359,30 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
                   <label htmlFor="register-password">รหัสผ่านสำหรับเข้าสู่ระบบ *</label>
                   <div className="input-icon-container">
                     <svg className="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" /></svg>
-                    <input 
-                      type={showRegisterPassword ? "text" : "password"} 
-                      id="register-password" 
-                      className="auth-input" 
-                      placeholder="••••••••" 
+                    <input
+                      type={showRegisterPassword ? "text" : "password"}
+                      id="register-password"
+                      className="auth-input"
+                      placeholder="••••••••"
                       value={registerPassword}
                       onChange={(e) => setRegisterPassword(e.target.value)}
-                      required 
+                      required
                       autoComplete="new-password"
                     />
-                    <button 
-                      type="button" 
-                      className="password-toggle" 
+                    <button
+                      type="button"
+                      className="password-toggle"
                       onClick={() => setShowRegisterPassword(!showRegisterPassword)}
                     >
                       <svg viewBox="0 0 24 24" className="eye-icon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" /></svg>
                     </button>
                   </div>
-                  
+
                   {/* Password Strength Meter */}
                   <div className="strength-meter-container">
                     <div className="strength-meter-bar">
-                      <div 
-                        className="strength-meter-progress" 
+                      <div
+                        className="strength-meter-progress"
                         id="strength-bar-progress"
                         style={{ width: `${(passwordStrength.score / 5) * 100}%`, background: passwordStrength.color }}
                       ></div>
@@ -416,19 +416,19 @@ export default function AuthScreen({ onLoginSuccess, divisions = [], firestoreDb
                   <label htmlFor="register-confirm-password">ยืนยันรหัสผ่านอีกครั้ง *</label>
                   <div className="input-icon-container">
                     <svg className="input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" /></svg>
-                    <input 
-                      type={showRegisterConfirmPassword ? "text" : "password"} 
-                      id="register-confirm-password" 
-                      className="auth-input" 
-                      placeholder="••••••••" 
+                    <input
+                      type={showRegisterConfirmPassword ? "text" : "password"}
+                      id="register-confirm-password"
+                      className="auth-input"
+                      placeholder="••••••••"
                       value={registerConfirmPassword}
                       onChange={(e) => setRegisterConfirmPassword(e.target.value)}
-                      required 
+                      required
                       autoComplete="new-password"
                     />
-                    <button 
-                      type="button" 
-                      className="password-toggle" 
+                    <button
+                      type="button"
+                      className="password-toggle"
                       onClick={() => setShowRegisterConfirmPassword(!showRegisterConfirmPassword)}
                     >
                       <svg viewBox="0 0 24 24" className="eye-icon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" /></svg>

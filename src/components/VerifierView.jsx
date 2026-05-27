@@ -695,7 +695,7 @@ export default function VerifierView({ assets = [], divisions = [] }) {
                   </div>
 
                   {/* Variance Cards */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', width: '100%' }}>
+                  <div className="variance-grid">
                     <div style={{ background: 'var(--bg-surface)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-md)', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', boxShadow: 'var(--glass-shadow)', backdropFilter: 'var(--glass-blur)' }}>
                       <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', fontWeight: 600 }}>เสนอจัดซื้อจริง</span>
                       <span style={{ fontFamily: 'Inter', fontSize: '1.15rem', fontWeight: 800, color: evaluationResult.isCompliant ? 'var(--color-success)' : 'var(--color-error)' }}>

@@ -81,17 +81,17 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
     }
 
     const reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function (event) {
       const img = new Image();
-      img.onload = function() {
+      img.onload = function () {
         const maxBytes = 500 * 1024;
         let canvas = document.createElement('canvas');
         let ctx = canvas.getContext('2d');
-        
+
         const maxDimension = 1024;
         let width = img.width;
         let height = img.height;
-        
+
         if (width > maxDimension || height > maxDimension) {
           if (width > height) {
             height = Math.round((height * maxDimension) / width);
@@ -101,19 +101,19 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
             height = maxDimension;
           }
         }
-        
+
         canvas.width = width;
         canvas.height = height;
         ctx.drawImage(img, 0, 0, width, height);
-        
+
         let quality = 0.9;
         let dataUrl = canvas.toDataURL('image/jpeg', quality);
-        
+
         while (dataUrl.length * 0.75 > maxBytes && quality > 0.1) {
           quality -= 0.1;
           dataUrl = canvas.toDataURL('image/jpeg', quality);
         }
-        
+
         const finalSizeBytes = Math.round(dataUrl.length * 0.75);
         if (finalSizeBytes > maxBytes) {
           showToast(`ไม่สามารถบีบอัดรูปภาพให้ต่ำกว่า 500kB ได้ (ขนาดปัจจุบัน ${(finalSizeBytes / 1024).toFixed(1)}kB) กรุณาใช้รูปภาพขนาดเล็กกว่านี้`, 'warning');
@@ -144,7 +144,7 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
     }
 
     const reader = new FileReader();
-    reader.onload = function(event) {
+    reader.onload = function (event) {
       setFormPdf(event.target.result);
       setFormPdfName(file.name);
       showToast(`แนบไฟล์เอกสาร PDF "${file.name}" สำเร็จแล้ว`, 'success');
@@ -164,7 +164,7 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
       if (saved) {
         try {
           activePrices = JSON.parse(saved);
-        } catch (e) {}
+        } catch (e) { }
       }
     }
     if (formCategory && activePrices[formCategory]) {
@@ -231,7 +231,7 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
     return assets.filter(a => {
       // 1. Search Query Match
       const searchLower = filterSearch.toLowerCase().trim();
-      const matchSearch = !searchLower || 
+      const matchSearch = !searchLower ||
         a.name.toLowerCase().includes(searchLower) ||
         a.assetCode.toLowerCase().includes(searchLower) ||
         a.owner.toLowerCase().includes(searchLower);
@@ -465,7 +465,7 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
       <td colspan="13" class="title" style="text-align: center;">รายงานทะเบียนครุภัณฑ์และตรวจสอบเกณฑ์ราคามาตรฐาน</td>
     </tr>
     <tr>
-      <td colspan="13" class="subtitle" style="text-align: center; padding-bottom: 15px;">สำนักงานสาธารณสุขและสิ่งแวดล้อม เทศบาลนครยะลา | ${periodText} | ข้อมูล ณ วันที่ ${new Date().toLocaleDateString('th-TH')}</td>
+      <td colspan="13" class="subtitle" style="text-align: center; padding-bottom: 15px;"> | ${periodText} | ข้อมูล ณ วันที่ ${new Date().toLocaleDateString('th-TH')}</td>
     </tr>
     <tr>
       <th>รูปภาพ</th>
@@ -587,10 +587,10 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
         <div className="filters-grid">
           <div className="input-group" style={{ gridColumn: 'span 2' }}>
             <label htmlFor="filter-search">ค้นหาครุภัณฑ์</label>
-            <input 
-              type="text" 
-              id="filter-search" 
-              className="form-control" 
+            <input
+              type="text"
+              id="filter-search"
+              className="form-control"
               placeholder="พิมพ์เลขครุภัณฑ์, ชื่อ หรือผู้ดูแล..."
               value={filterSearch}
               onChange={(e) => setFilterSearch(e.target.value)}
@@ -599,8 +599,8 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
           <div className="input-group">
             <label htmlFor="filter-category">หมวดครุภัณฑ์</label>
-            <select 
-              id="filter-category" 
+            <select
+              id="filter-category"
               className="form-control"
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
@@ -618,8 +618,8 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
           <div className="input-group">
             <label htmlFor="filter-division">ฝ่ายงานที่รับผิดชอบ</label>
-            <select 
-              id="filter-division" 
+            <select
+              id="filter-division"
               className="form-control"
               value={filterDivision}
               onChange={(e) => setFilterDivision(e.target.value)}
@@ -633,8 +633,8 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
           <div className="input-group">
             <label htmlFor="filter-compliance">สถานะราคามาตรฐาน</label>
-            <select 
-              id="filter-compliance" 
+            <select
+              id="filter-compliance"
               className="form-control"
               value={filterCompliance}
               onChange={(e) => setFilterCompliance(e.target.value)}
@@ -649,11 +649,11 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
           <div className="action-btns" style={{ marginBottom: '2px' }}>
             <button id="reset-filter-btn" className="btn-secondary" title="ล้างตัวกรอง" onClick={handleResetFilters}>ล้าง</button>
             <button id="export-csv-btn" className="btn-secondary" title="ส่งออก Excel (รายงานแบบทางการ)" onClick={handleExportExcel}>
-              <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z" /></svg>
               ส่งออก Excel
             </button>
             <button id="print-report-btn" className="btn-secondary" title="พิมพ์รายงาน" onClick={() => window.print()}>
-              <svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+              <svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z" /></svg>
               พิมพ์
             </button>
           </div>
@@ -664,7 +664,7 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
       {currentUser.role !== 'viewer' && (
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.25rem' }}>
           <button id="add-asset-btn" className="btn-primary" onClick={handleOpenNewModal}>
-            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg>
             ลงทะเบียนครุภัณฑ์ใหม่
           </button>
         </div>
@@ -678,10 +678,10 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
               <tr>
                 <th>เลขครุภัณฑ์</th>
                 <th>ชื่อรายการครุภัณฑ์</th>
-                <th>หมวดครุภัณฑ์</th>
-                <th>ฝ่าย / กลุ่มงานหลัก</th>
+                <th className="hide-tablet">หมวดครุภัณฑ์</th>
+                <th className="hide-mobile">ฝ่าย / กลุ่มงานหลัก</th>
                 <th>ราคา (บาท)</th>
-                <th>ราคามาตรฐานสูงสุด</th>
+                <th className="hide-tablet">ราคามาตรฐานสูงสุด</th>
                 <th>สถานะ</th>
                 <th style={{ textAlign: 'center' }}>จัดการ</th>
               </tr>
@@ -699,20 +699,20 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', justifyContent: 'space-between' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                           {asset.image && (
-                            <img 
-                              src={asset.image} 
-                              alt={asset.name} 
+                            <img
+                              src={asset.image}
+                              alt={asset.name}
                               onClick={() => setPreviewAsset(asset)}
                               title="คลิกเพื่อดูรูปภาพและรายละเอียดครุภัณฑ์"
-                              style={{ 
-                                width: '38px', 
-                                height: '38px', 
-                                borderRadius: 'var(--radius-sm)', 
-                                objectFit: 'cover', 
+                              style={{
+                                width: '38px',
+                                height: '38px',
+                                borderRadius: 'var(--radius-sm)',
+                                objectFit: 'cover',
                                 border: '1px solid var(--border-color)',
                                 flexShrink: 0,
                                 cursor: 'pointer'
-                              }} 
+                              }}
                             />
                           )}
                           <span>{asset.name}</span>
@@ -743,8 +743,8 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
                         )}
                       </div>
                     </td>
-                    <td>{getCategoryLabel(asset.category)}</td>
-                    <td>
+                    <td className="hide-tablet">{getCategoryLabel(asset.category)}</td>
+                    <td className="hide-mobile">
                       <div>
                         <strong>{div ? div.name : 'ไม่พบฝ่าย'}</strong>
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{sub ? sub.name : 'ไม่พบกลุ่มงาน'}</div>
@@ -756,7 +756,7 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
                       </div>
                     </td>
                     <td style={{ fontFamily: 'Inter', fontWeight: '600' }}>{asset.unitPrice.toLocaleString()}</td>
-                    <td style={{ fontFamily: 'Inter', color: 'var(--text-secondary)' }}>
+                    <td className="hide-tablet" style={{ fontFamily: 'Inter', color: 'var(--text-secondary)' }}>
                       {comp.standardPrice ? comp.standardPrice.toLocaleString() : '-'}
                     </td>
                     <td>
@@ -769,19 +769,19 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
                       <div className="action-btns" style={{ justifyContent: 'center' }}>
                         {currentUser.role !== 'viewer' && (
                           <>
-                            <button 
-                              className="btn-icon edit" 
-                              title="แก้ไขรายการ" 
+                            <button
+                              className="btn-icon edit"
+                              title="แก้ไขรายการ"
                               onClick={() => handleOpenEditModal(asset)}
                             >
-                              <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                              <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" /></svg>
                             </button>
-                            <button 
-                              className="btn-icon delete" 
-                              title="ลบรายการ" 
+                            <button
+                              className="btn-icon delete"
+                              title="ลบรายการ"
                               onClick={() => handleRequestDelete(asset.id)}
                             >
-                              <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                              <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" /></svg>
                             </button>
                           </>
                         )}
@@ -798,7 +798,7 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
         {/* Empty State */}
         {filteredAssets.length === 0 && (
           <div id="assets-empty-state" className="empty-state">
-            <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z" /></svg>
             <h3>ไม่พบข้อมูลครุภัณฑ์</h3>
             <p>ไม่มีรายการพัสดุใดสอดคล้องกับการค้นหาหรือเงื่อนไขตัวกรองของคุณ</p>
           </div>
@@ -815,38 +815,38 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
             </div>
             <div className="modal-body">
               <form id="asset-form" className="modal-form" onSubmit={handleSaveSubmit}>
-                
+
                 <div className="input-group span-2">
                   <label htmlFor="form-asset-name">ชื่อรายการครุภัณฑ์ *</label>
-                  <input 
-                    type="text" 
-                    id="form-asset-name" 
-                    className="form-control" 
-                    placeholder="ระบุชื่อเรียกครุภัณฑ์ เช่น คอมพิวเตอร์งานบัญชี..." 
+                  <input
+                    type="text"
+                    id="form-asset-name"
+                    className="form-control"
+                    placeholder="ระบุชื่อเรียกครุภัณฑ์ เช่น คอมพิวเตอร์งานบัญชี..."
                     value={formName}
                     onChange={(e) => setFormName(e.target.value)}
-                    required 
+                    required
                   />
                 </div>
 
                 <div className="input-group">
                   <label htmlFor="form-asset-code">เลขครุภัณฑ์ *</label>
-                  <input 
-                    type="text" 
-                    id="form-asset-code" 
-                    className="form-control" 
-                    placeholder="คร.10.คอม.68/xxx" 
+                  <input
+                    type="text"
+                    id="form-asset-code"
+                    className="form-control"
+                    placeholder="คร.10.คอม.68/xxx"
                     value={formCode}
                     onChange={(e) => setFormCode(e.target.value)}
-                    required 
+                    required
                   />
                 </div>
 
                 <div className="input-group">
                   <label htmlFor="form-asset-category">หมวดหมู่ตามงบประมาณ *</label>
-                  <select 
-                    id="form-asset-category" 
-                    className="form-control" 
+                  <select
+                    id="form-asset-category"
+                    className="form-control"
                     value={formCategory}
                     onChange={(e) => setFormCategory(e.target.value)}
                     required
@@ -864,9 +864,9 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
                 <div className="input-group span-2">
                   <label htmlFor="form-asset-std-item">ผูกรายการราคามาตรฐาน (ธ.ค. 2568 / พ.ค. 2569)</label>
-                  <select 
-                    id="form-asset-std-item" 
-                    className="form-control" 
+                  <select
+                    id="form-asset-std-item"
+                    className="form-control"
                     disabled={!formCategory}
                     value={formStdItem}
                     onChange={(e) => handleStandardItemChange(e.target.value)}
@@ -882,18 +882,18 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
                 <div className="input-group">
                   <label htmlFor="form-asset-price">ราคาต่อหน่วย (บาท) *</label>
-                  <input 
-                    type="number" 
-                    id="form-asset-price" 
-                    className="form-control" 
-                    placeholder="ระบุราคาจัดซื้อจริงต่อหน่วย..." 
+                  <input
+                    type="number"
+                    id="form-asset-price"
+                    className="form-control"
+                    placeholder="ระบุราคาจัดซื้อจริงต่อหน่วย..."
                     value={formPrice}
                     onChange={(e) => setFormPrice(e.target.value)}
-                    required 
+                    required
                   />
                   {priceHelper && (
-                    <div 
-                      id="form-price-helper" 
+                    <div
+                      id="form-price-helper"
                       className="field-price-helper"
                       style={{ display: 'flex', color: priceHelper.color, marginTop: '0.25rem', fontSize: '0.8rem' }}
                     >
@@ -904,21 +904,21 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
                 <div className="input-group">
                   <label htmlFor="form-asset-date">วันที่ได้รับ / ลงทะเบียน *</label>
-                  <input 
-                    type="date" 
-                    id="form-asset-date" 
-                    className="form-control" 
+                  <input
+                    type="date"
+                    id="form-asset-date"
+                    className="form-control"
                     value={formDate}
                     onChange={(e) => setFormDate(e.target.value)}
-                    required 
+                    required
                   />
                 </div>
 
                 <div className="input-group">
                   <label htmlFor="form-asset-division">ฝ่ายงานที่ครอบครอง *</label>
-                  <select 
-                    id="form-asset-division" 
-                    className="form-control" 
+                  <select
+                    id="form-asset-division"
+                    className="form-control"
                     value={formDivision}
                     onChange={(e) => setFormDivision(e.target.value)}
                     disabled={currentUser.role === 'admin'} // Admin is locked to their own division
@@ -933,9 +933,9 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
                 <div className="input-group">
                   <label htmlFor="form-asset-subgroup">กลุ่มงานหลัก/ย่อย *</label>
-                  <select 
-                    id="form-asset-subgroup" 
-                    className="form-control" 
+                  <select
+                    id="form-asset-subgroup"
+                    className="form-control"
                     value={formSubgroup}
                     onChange={(e) => setFormSubgroup(e.target.value)}
                     disabled={!formDivision}
@@ -950,22 +950,22 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
                 <div className="input-group">
                   <label htmlFor="form-asset-owner">ผู้ดูแล / ผู้รับผิดชอบ *</label>
-                  <input 
-                    type="text" 
-                    id="form-asset-owner" 
-                    className="form-control" 
-                    placeholder="ระบุชื่อเจ้าหน้าที่..." 
+                  <input
+                    type="text"
+                    id="form-asset-owner"
+                    className="form-control"
+                    placeholder="ระบุชื่อเจ้าหน้าที่..."
                     value={formOwner}
                     onChange={(e) => setFormOwner(e.target.value)}
-                    required 
+                    required
                   />
                 </div>
 
                 <div className="input-group">
                   <label htmlFor="form-asset-status">สถานะพัสดุ *</label>
-                  <select 
-                    id="form-asset-status" 
-                    className="form-control" 
+                  <select
+                    id="form-asset-status"
+                    className="form-control"
                     value={formStatus}
                     onChange={(e) => setFormStatus(e.target.value)}
                     required
@@ -983,11 +983,11 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
                 <div className="input-group span-2">
                   <label htmlFor="form-asset-location">สถานที่ตั้ง / ห้องติดตั้งพัสดุ</label>
-                  <input 
-                    type="text" 
-                    id="form-asset-location" 
-                    className="form-control" 
-                    placeholder="ระบุสถานที่ตั้ง เช่น อาคาร 3 ชั้น 2 ห้องประชุมสารบรรณ..." 
+                  <input
+                    type="text"
+                    id="form-asset-location"
+                    className="form-control"
+                    placeholder="ระบุสถานที่ตั้ง เช่น อาคาร 3 ชั้น 2 ห้องประชุมสารบรรณ..."
                     value={formLocation}
                     onChange={(e) => setFormLocation(e.target.value)}
                   />
@@ -995,10 +995,10 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
 
                 <div className="input-group span-2">
                   <label htmlFor="form-asset-notes">บันทึกเพิ่มเติม (รายละเอียดสเปก หรือคำอธิบายเสริม)</label>
-                  <textarea 
-                    id="form-asset-notes" 
-                    className="form-control" 
-                    rows="3" 
+                  <textarea
+                    id="form-asset-notes"
+                    className="form-control"
+                    rows="3"
                     placeholder="ระบุข้อมูลเสริม เช่น ยี่ห้อ รุ่น หรือหมายเหตุอื่นๆ..."
                     value={formNotes}
                     onChange={(e) => setFormNotes(e.target.value)}
@@ -1019,9 +1019,9 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
                   }}>
                     {formImage ? (
                       <div style={{ position: 'relative', width: '100px', height: '100px' }}>
-                        <img 
-                          src={formImage} 
-                          alt="Asset preview" 
+                        <img
+                          src={formImage}
+                          alt="Asset preview"
                           style={{
                             width: '100%',
                             height: '100%',
@@ -1075,12 +1075,12 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
                         <span>ไม่มีรูปภาพ</span>
                       </div>
                     )}
-                    
+
                     <div style={{ flex: 1, minWidth: '200px', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <input 
-                        type="file" 
-                        id="form-asset-image-file" 
-                        accept="image/*" 
+                      <input
+                        type="file"
+                        id="form-asset-image-file"
+                        accept="image/*"
                         style={{ display: 'none' }}
                         onChange={handleImageChange}
                       />
@@ -1184,12 +1184,12 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
                         <span>ไม่มีเอกสารแนบ</span>
                       </div>
                     )}
-                    
+
                     <div style={{ flex: 1, minWidth: '200px', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <input 
-                        type="file" 
-                        id="form-asset-pdf-file" 
-                        accept="application/pdf" 
+                      <input
+                        type="file"
+                        id="form-asset-pdf-file"
+                        accept="application/pdf"
                         style={{ display: 'none' }}
                         onChange={handlePdfChange}
                       />
@@ -1226,7 +1226,7 @@ export default function AssetsView({ assets = [], divisions = [], currentUser, o
             <div className="confirm-modal-header">
               <div className="confirm-modal-icon warning">
                 <svg viewBox="0 0 24 24" className="confirm-icon-svg">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z"/>
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1s1 .45 1 1v4c0 .55-.45 1-1 1zm1-8h-2V7h2v2z" />
                 </svg>
               </div>
               <h3 id="confirm-modal-title">ยืนยันการลบครุภัณฑ์</h3>

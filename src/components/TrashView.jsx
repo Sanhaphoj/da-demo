@@ -100,9 +100,9 @@ export default function TrashView({ trashAssets = [], divisions = [], onRestore,
               <tr>
                 <th>เลขครุภัณฑ์</th>
                 <th>ชื่อรายการครุภัณฑ์</th>
-                <th>หมวดหมู่</th>
-                <th>ฝ่าย / กลุ่มงานเดิม</th>
-                <th>วันที่ลบ</th>
+                <th className="hide-tablet">หมวดหมู่</th>
+                <th className="hide-mobile">ฝ่าย / กลุ่มงานเดิม</th>
+                <th className="hide-tablet">วันที่ลบ</th>
                 <th style={{ textAlign: 'center' }}>เวลาคงเหลือ</th>
                 <th style={{ textAlign: 'center' }}>การจัดการ</th>
               </tr>
@@ -145,14 +145,14 @@ export default function TrashView({ trashAssets = [], divisions = [], onRestore,
                         <span>{asset.name}</span>
                       </div>
                     </td>
-                    <td>{getCategoryLabel(asset.category)}</td>
-                    <td>
+                    <td className="hide-tablet">{getCategoryLabel(asset.category)}</td>
+                    <td className="hide-mobile">
                       <div>
                         <strong>{div ? div.name : 'ไม่พบฝ่าย'}</strong>
                         <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{sub ? sub.name : 'ไม่พบกลุ่มงาน'}</div>
                       </div>
                     </td>
-                    <td>{formatDateThai(asset.deletedAt)}</td>
+                    <td className="hide-tablet">{formatDateThai(asset.deletedAt)}</td>
                     <td style={{ textAlign: 'center' }}>
                       <span className={badgeClass} style={{ fontSize: '0.8rem', padding: '0.35rem 0.6rem' }}>
                         {countdownText}
